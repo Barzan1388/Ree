@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        
+        .check-item {
+            margin-bottom: 20px;
+        }
+        
+        .check-item h3 {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .progress-bar {
+            height: 5px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-top: 5px;
+        }
+        
+        .progress {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            width: 0;
+            transition: width 0.5s ease-in-out;
+        }
+        
+        .cross {
+            color: red;
+            font-weight: bold;
+            display: none;
+        }
+        
+        #mainPage {
+            display: none;
+        }
+        
+        .bottom-menu {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .menu-item {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .menu-item img {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="checkPage">
+            <div class="check-item">
+                <h3>Your life span</h3>
+                <div class="progress-bar">
+                    <div id="lifespanProgress" class="progress"></div>
+                </div>
+                <span id="lifespanCross" class="cross">✗</span>
+            </div>
+            <div class="check-item">
+                <h3>Premium Telegram</h3>
+                <div class="progress-bar">
+                    <div id="premiumProgress" class="progress"></div>
+                </div>
+                <span id="premiumCross" class="cross">✗</span>
+            </div>
+            <div class="check-item">
+                <h3>Username</h3>
+                <div class="progress-bar">
+                    <div id="usernameProgress" class="progress"></div>
+                </div>
+                <span id="usernameCross" class="cross">✗</span>
+            </div>
+        </div>
+        <div id="mainPage">
+            <h2>Main Page</h2>
+            <div class="bottom-menu">
+                <div class="menu-item">
+                    <img src="/api/placeholder/24/24" alt="Crow">
+                    <p>Crow</p>
+                </div>
+                <div class="menu-item">
+                    <img src="/api/placeholder/24/24" alt="Friend">
+                    <p>Friend</p>
+                </div>
+                <div class="menu-item">
+                    <img src="/api/placeholder/24/24" alt="AirDrop">
+                    <p>AirDrop</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function checkAndUpdateProgress(id, value) {
+            const progressBar = document.getElementById(id + 'Progress');
+            const cross = document.getElementById(id + 'Cross');
+            if (value) {
+                progressBar.style.width = '100%';
+                cross.style.display = 'none';
+            } else {
+                progressBar.style.width = '0';
+                cross.style.display = 'inline';
+            }
+        }
+
+        function simulateCheck() {
+            const lifespan = Math.floor(Math.random() * 4);
+            const lifespanProgress = document.getElementById('lifespanProgress');
+            const lifespanCross = document.getElementById('lifespanCross');
+
+            if (lifespan < 1) {
+                lifespanProgress.style.width = '0';
+                lifespanCross.style.display = 'inline';
+            } else if (lifespan === 1) {
+                lifespanProgress.style.width = '33%';
+                lifespanCross.style.display = 'none';
+            } else if (lifespan === 2) {
+                lifespanProgress.style.width = '66%';
+                lifespanCross.style.display = 'none';
+            } else {
+                lifespanProgress.style.width = '100%';
+                lifespanCross.style.display = 'none';
+            }
+
+            const isPremium = Math.random() < 0.5;
+            checkAndUpdateProgress('premium', isPremium);
+
+            const hasUsername = Math.random() < 0.5;
+            checkAndUpdateProgress('username', hasUsername);
+
+            const crossCount = [lifespan < 1, !isPremium, !hasUsername].filter(Boolean).length;
+
+            setTimeout(() => {
+                if (crossCount < 2) {
+                    document.getElementById('checkPage').style.display = 'none';
+                    document.getElementById('mainPage').style.display = 'block';
+                } else {
+                    alert('Access denied. Please try again later.');
+                }
+            }, 2000);
+        }
+
+        window.onload = simulateCheck;
+    </script>
+</body>
+
+</html>
